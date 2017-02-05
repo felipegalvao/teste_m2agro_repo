@@ -23,6 +23,7 @@ from api_servicos import views as servicos_views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^produtos/$', safra_produto_views.ProdutoList.as_view()),
+    url(r'^produtos/atualizar_preco_medio/$', safra_produto_views.ProdutoUpdatePrecoMedio),
     url(r'^produtos/(?P<pk>[0-9]+)/$', safra_produto_views.ProdutoDetail.as_view()),
     url(r'^safras/$', safra_produto_views.SafraList.as_view()),
     url(r'^safras/(?P<pk>[0-9]+)/$', safra_produto_views.SafraDetail.as_view()),
