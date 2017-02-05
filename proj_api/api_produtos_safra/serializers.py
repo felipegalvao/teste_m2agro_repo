@@ -5,7 +5,7 @@ class ProdutoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produto
         fields = '__all__'
-        read_only_fields = ['custo_medio']
+        read_only_fields = ['preco_medio']
 
 class SafraSerializer(serializers.ModelSerializer):
     class Meta:

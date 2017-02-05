@@ -8,6 +8,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
 
+import datetime
+
 from api_servicos.models import Servico, LinhaServico
 from .models import Produto, Safra
 from .serializers import ProdutoSerializer, SafraSerializer
@@ -25,11 +27,20 @@ class ProdutoDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProdutoSerializer
 
 def ProdutoUpdatePrecoMedio(request):
+    today = datetime.date.today()
+    first = today.replace(day=1)
+    lastDayLastMonth = first - datetime.timedelta(days=1)
+    firstDayLastMonth = lastDayLastMonth.replace(day=1)
     produtos = Produto.objects.all()
     for produto in produtos:
-        linhas_servico = LinhaServico.objects.filter(produto=produto)
-        custo_total = linhas_servico.aggregate(Sum('custo'))['custo__sum']
-        quantidade_total = linhas_servico.aggregate(Sum('quantidade'))['quantidade__sum']
+        linhas_servico = LinhaServico.objects.filter(produto=produto, 
+                                                     servico__data_fim__lte=lastDayLastMonth,
+                                                     servico__data_fim__gte=firstDayLastMonth)
+        custo_total = 0
+        quantidade_total = 0
+        for linha in linhas_servico:
+            custo_total += linha.custo * linha.quantidade
+            quantidade_total += linha.quantidade
         preco_medio = custo_total / quantidade_total
         produto.preco_medio = preco_medio
         produto.save()
