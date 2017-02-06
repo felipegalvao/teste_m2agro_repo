@@ -27,6 +27,9 @@ class ProdutoDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProdutoSerializer
 
 def ProdutoUpdatePrecoMedio(request):
+    '''
+    Atualiza todos os produtos considerando linhas de serviços que se encerraram no mês anterior
+    '''
     today = datetime.date.today()
     first = today.replace(day=1)
     lastDayLastMonth = first - datetime.timedelta(days=1)
